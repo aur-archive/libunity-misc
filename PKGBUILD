@@ -1,0 +1,31 @@
+# Maintainer: Charles Bos <charlesbos1 AT gmail>
+# Contributor: Balló György <ballogyor+arch at gmail dot com>
+
+pkgname=libunity-misc
+pkgver=4.0.4
+pkgrel=3
+pkgdesc="Misc. differently licensed stuff for Unity"
+arch=('i686' 'x86_64')
+url="https://launchpad.net/libunity-misc"
+license=('LGPL')
+depends=('gtk3<=3.8.4')
+options=('!libtool')
+source=(http://launchpad.net/$pkgname/trunk/$pkgver/+download/$pkgname-$pkgver.tar.gz
+        set-default-size.patch)
+md5sums=('70f01799e60e93afe6d01c1658d2d5ee'
+         'f5606a33277bab98b96ac366e9bc5f3c')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  patch -Np0 -i "$srcdir/set-default-size.patch"
+
+  ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+              --disable-static
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir/" install
+}
